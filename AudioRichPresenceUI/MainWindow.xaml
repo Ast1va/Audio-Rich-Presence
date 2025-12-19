@@ -3,7 +3,7 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:local="clr-namespace:AudioRichPresenceUI"
         Title="Audio Rich Presence"
-        Icon="logo.png"
+        Icon="pack://application:,,,/AudioRichPresenceUI;component/logo.png"
         Width="420"
         Height="410"
         WindowStartupLocation="CenterScreen"
@@ -53,19 +53,12 @@
                                     CornerRadius="16"
                                     Background="#30000000"
                                     BorderBrush="#30FFFFFF"
-                                    BorderThickness="1">
-                                <Border.Triggers>
-                                    <EventTrigger RoutedEvent="Border.Loaded">
-                                        <BeginStoryboard>
-                                            <Storyboard>
-                                                <ColorAnimation Storyboard.TargetName="Track"
-                                                                Storyboard.TargetProperty="(Border.Background).(SolidColorBrush.Color)"
-                                                                Duration="0:0:0.2"/>
-                                            </Storyboard>
-                                        </BeginStoryboard>
-                                    </EventTrigger>
-                                </Border.Triggers>
-                            </Border>
+                                    BorderThickness="1"/>
+                            
+                            <Border x:Name="ActiveTrack"
+                                    CornerRadius="16"
+                                    Background="#FF00E0A0"
+                                    Opacity="0"/>
 
                             <Ellipse x:Name="Thumb"
                                      Width="24" Height="24"
@@ -75,33 +68,29 @@
                                 <Ellipse.Effect>
                                     <DropShadowEffect BlurRadius="4" ShadowDepth="1" Opacity="0.2"/>
                                 </Ellipse.Effect>
-                                <Ellipse.RenderTransform>
-                                    <TranslateTransform x:Name="ThumbTranslate" X="0"/>
-                                </Ellipse.RenderTransform>
                             </Ellipse>
                         </Grid>
 
                         <ControlTemplate.Triggers>
                             <Trigger Property="IsChecked" Value="True">
-                                <Setter TargetName="Track" Property="BorderBrush" Value="#00000000"/>
-                                <Setter TargetName="Track" Property="Background" Value="#FF00E0A0"/>
+                                <Setter TargetName="ActiveTrack" Property="Opacity" Value="1"/>
+                                <Setter TargetName="Thumb" Property="Margin" Value="28,0,0,0"/>
                             </Trigger>
 
                             <EventTrigger RoutedEvent="ToggleButton.Checked">
                                 <BeginStoryboard>
                                     <Storyboard>
-                                        <!-- Vibrant Cyan/Green Active Color -->
-                                        <ColorAnimation Storyboard.TargetName="Track"
-                                                        Storyboard.TargetProperty="(Border.Background).(SolidColorBrush.Color)"
-                                                        To="#FF00E0A0" Duration="0:0:0.3"/> 
+                                        <DoubleAnimation Storyboard.TargetName="ActiveTrack"
+                                                         Storyboard.TargetProperty="Opacity"
+                                                         To="1" Duration="0:0:0.3"/>
                                         
-                                        <DoubleAnimation Storyboard.TargetName="ThumbTranslate"
-                                                         Storyboard.TargetProperty="X"
-                                                         To="24" Duration="0:0:0.4">
-                                            <DoubleAnimation.EasingFunction>
+                                        <ThicknessAnimation Storyboard.TargetName="Thumb"
+                                                          Storyboard.TargetProperty="Margin"
+                                                          To="28,0,0,0" Duration="0:0:0.4">
+                                            <ThicknessAnimation.EasingFunction>
                                                 <BackEase EasingMode="EaseOut" Amplitude="0.5"/>
-                                            </DoubleAnimation.EasingFunction>
-                                        </DoubleAnimation>
+                                            </ThicknessAnimation.EasingFunction>
+                                        </ThicknessAnimation>
                                     </Storyboard>
                                 </BeginStoryboard>
                             </EventTrigger>
@@ -109,17 +98,17 @@
                             <EventTrigger RoutedEvent="ToggleButton.Unchecked">
                                 <BeginStoryboard>
                                     <Storyboard>
-                                        <ColorAnimation Storyboard.TargetName="Track"
-                                                        Storyboard.TargetProperty="(Border.Background).(SolidColorBrush.Color)"
-                                                        To="#30000000" Duration="0:0:0.3"/>
+                                        <DoubleAnimation Storyboard.TargetName="ActiveTrack"
+                                                         Storyboard.TargetProperty="Opacity"
+                                                         To="0" Duration="0:0:0.3"/>
                                         
-                                        <DoubleAnimation Storyboard.TargetName="ThumbTranslate"
-                                                         Storyboard.TargetProperty="X"
-                                                         To="0" Duration="0:0:0.4">
-                                            <DoubleAnimation.EasingFunction>
+                                        <ThicknessAnimation Storyboard.TargetName="Thumb"
+                                                          Storyboard.TargetProperty="Margin"
+                                                          To="4,0,0,0" Duration="0:0:0.4">
+                                            <ThicknessAnimation.EasingFunction>
                                                 <BackEase EasingMode="EaseOut" Amplitude="0.5"/>
-                                            </DoubleAnimation.EasingFunction>
-                                        </DoubleAnimation>
+                                            </ThicknessAnimation.EasingFunction>
+                                        </ThicknessAnimation>
                                     </Storyboard>
                                 </BeginStoryboard>
                             </EventTrigger>

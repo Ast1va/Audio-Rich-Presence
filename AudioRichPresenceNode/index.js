@@ -43,14 +43,28 @@ let helperProcess = null; // Store reference
    PLATFORM DETECTION
 ======================= */
 
-function detectPlatform(source = '') {
-  const s = String(source).toLowerCase();
+function detectPlatform(payload) {
+  const s = String(payload.source || '').toLowerCase();
+  const t = String(payload.title || '').toLowerCase();
+  const a = String(payload.artist || '').toLowerCase();
 
-  if (s.includes('spotify')) return 'spotify';
-  if (s.includes('apple')) return 'apple';
+  // 1) Spotify check (Desktop or Web)
+  if (s.includes('spotify') || t.includes('spotify') || a.includes('spotify')) {
+    return 'spotify';
+  }
 
-  // Şimdilik spotify ve apple harici her şeyi YouTube kabul ediyoruz
-  return 'youtube';
+  // 2) Apple Music check
+  if (s.includes('apple')) {
+    return 'apple';
+  }
+
+  // 3) YouTube / Browser check
+  const browserEngines = ['chrome', 'edge', 'opera', 'firefox', 'browser', 'youtube'];
+  if (browserEngines.some(engine => s.includes(engine))) {
+    return 'youtube';
+  }
+
+  return 'other';
 }
 
 /* =======================
@@ -119,7 +133,7 @@ async function handlePayload(payload) {
     return;
   }
 
-  const platform = detectPlatform(source);
+  const platform = detectPlatform(payload);
 
   if (platform === 'spotify') {
     // Spotify: hiçbir şey gösterme
@@ -165,6 +179,10 @@ async function handlePayload(payload) {
     await updateApplePresence(payload, false);
     return;
   }
+
+  // Tanınmayan bir platform ise her şeyi temizle
+  await clearApplePresence();
+  await clearYoutubePresence();
 }
 
 /* =======================

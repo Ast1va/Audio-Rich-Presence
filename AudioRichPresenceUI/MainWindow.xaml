@@ -84,6 +84,8 @@
                         <ControlTemplate.Triggers>
                             <Trigger Property="IsChecked" Value="True">
                                 <Setter TargetName="Track" Property="BorderBrush" Value="#00000000"/>
+                                <Setter TargetName="Track" Property="Background" Value="#FF00E0A0"/>
+                                <Setter TargetName="ThumbTranslate" Property="X" Value="24"/>
                             </Trigger>
 
                             <EventTrigger RoutedEvent="ToggleButton.Checked">

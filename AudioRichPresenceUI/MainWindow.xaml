@@ -14,7 +14,8 @@
         SnapsToDevicePixels="True"
         UseLayoutRounding="True"
         TextOptions.TextFormattingMode="Display"
-        TextOptions.TextRenderingMode="ClearType">
+        TextOptions.TextRenderingMode="ClearType"
+        Loaded="Window_Loaded">
 
     <Window.Resources>
         <!-- Font -->

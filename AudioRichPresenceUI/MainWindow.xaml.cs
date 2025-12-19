@@ -35,12 +35,8 @@ namespace AudioRichPresenceUI
         public MainWindow()
         {
             InitializeComponent();
-            LoadSettings();
             SetupTrayIcon();
             UpdateStatus(isRunning: false);
-            
-            // İlk açılışta eğer ayarlar açıksa node'u başlat
-            UpdateNodeState();
         }
 
         private void SetupTrayIcon()
@@ -119,6 +115,12 @@ namespace AudioRichPresenceUI
         {
             if (e.ButtonState == MouseButtonState.Pressed)
                 DragMove();
+        }
+
+        private void Window_Loaded(object sender, RoutedEventArgs e)
+        {
+            LoadSettings();
+            UpdateNodeState();
         }
 
         private void Toggle_Click(object sender, RoutedEventArgs e)

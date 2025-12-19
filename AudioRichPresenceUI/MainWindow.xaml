@@ -179,7 +179,11 @@
                                    Margin="0,-2,0,0"/> <!-- Slight optical alignment -->
                         
                         <!-- Concise Status Badge -->
-                        <Border x:Name="StatusBadge" Background="#1AFFFFFF" CornerRadius="10" Margin="12,0,0,0" Padding="8,4" VerticalAlignment="Center">
+                        <Border x:Name="StatusBadge" Background="#1AFFFFFF" CornerRadius="10" Margin="12,0,0,0" Padding="8,4" VerticalAlignment="Center"
+                                ToolTipService.InitialShowDelay="0">
+                            <Border.ToolTip>
+                                <ToolTip x:Name="StatusToolTip" Content="Uygulama hazır."/>
+                            </Border.ToolTip>
                             <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
                                 <Ellipse x:Name="StatusCircle" Width="6" Height="6" Fill="#FF808080" Margin="0,0,6,0" VerticalAlignment="Center"/>
                                 <TextBlock x:Name="StatusText" 

@@ -275,7 +275,14 @@ namespace AudioRichPresenceUI
             }
             catch (Exception ex)
             {
-                UpdateStatus(isRunning: false, error: ex.Message);
+                string msg = ex.Message;
+                // 'Sistem belirtilen dosyayı bulamıyor' - Node.js yüklü değilse genelde bu gelir
+                if (ex is System.ComponentModel.Win32Exception winEx && winEx.NativeErrorCode == 2)
+                {
+                    msg = "Node.js sistemde bulunamadı. Lütfen Node.js'i (LTS) yükleyin veya PATH'e eklendiğinden emin olun.";
+                }
+
+                UpdateStatus(isRunning: false, error: $"HATA AYRINTISI: {msg}");
                 ToggleApple.IsChecked = false;
                 ToggleYoutube.IsChecked = false;
             }
@@ -309,6 +316,7 @@ namespace AudioRichPresenceUI
                 StatusText.Text = "HATA";
                 StatusCircle.Fill = (System.Windows.Media.Brush)new System.Windows.Media.BrushConverter().ConvertFromString("#FFFF4444");
                 StatusBadge.Background = (System.Windows.Media.Brush)new System.Windows.Media.BrushConverter().ConvertFromString("#33FF4444");
+                StatusToolTip.Content = error;
                 return;
             }
 
@@ -317,12 +325,14 @@ namespace AudioRichPresenceUI
                 StatusText.Text = "AKTİF";
                 StatusCircle.Fill = (System.Windows.Media.Brush)new System.Windows.Media.BrushConverter().ConvertFromString("#FF00FF80");
                 StatusBadge.Background = (System.Windows.Media.Brush)new System.Windows.Media.BrushConverter().ConvertFromString("#3300FF80");
+                StatusToolTip.Content = "Her şey yolunda, arka plan süreci çalışıyor.";
             }
             else
             {
                 StatusText.Text = "KAPALI";
                 StatusCircle.Fill = (System.Windows.Media.Brush)new System.Windows.Media.BrushConverter().ConvertFromString("#FF808080");
                 StatusBadge.Background = (System.Windows.Media.Brush)new System.Windows.Media.BrushConverter().ConvertFromString("#1AFFFFFF");
+                StatusToolTip.Content = "Zengin içerik paylaşımı devre dışı.";
             }
         }
 

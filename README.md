@@ -28,7 +28,7 @@ The project leverages a high-performance **Tri-Process** architecture:
 ## 🚀 Getting Started
 ### Prerequisites
 - .NET 8 SDK
-- Node.js (v16+)
+- [Node.js (LTS)](https://nodejs.org/) (Required for backend Discord RPC)
 
 ### Installation
 1. Clone the repository.

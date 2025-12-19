@@ -1,0 +1,11 @@
+{
+  "name": "audio-discord-presence",
+  "version": "1.0.0",
+  "main": "index.js",
+  "scripts": {
+    "start": "node index.js"
+  },
+  "dependencies": {
+    "discord-rpc": "^4.0.1"
+  }
+}

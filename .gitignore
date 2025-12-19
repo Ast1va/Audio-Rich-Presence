@@ -1,0 +1,28 @@
+# Build outputs
+bin/
+obj/
+dist/
+publish/
+
+# Rider / VS / VSCode
+.vs/
+.vscode/
+*.sln.dotnet7.user
+
+# User files
+*.user
+*.userosscache
+*.suo
+*.userprefs
+
+# Logs
+*.log
+npm-debug.log*
+
+# Node
+node_modules/
+package-lock.json
+
+# OS files
+.DS_Store
+Thumbs.db

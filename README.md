@@ -1,40 +1,51 @@
-# Audio Rich Presence & WPF UI 🎵✨
+<div align="center">
+  <img src="logo.png" width="128" height="128" alt="Logo">
+  <h1>Audio Rich Presence</h1>
+  <p><i>Premium Discord Activity for Apple Music & YouTube</i></p>
 
-A premium, modern Windows application to showcase your current Apple Music or YouTube activity on Discord. Features a stunning "Liquid Glass" aesthetic and optimized performance.
+  [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
+  [![Platform](https://img.shields.io/badge/Platform-Windows-blue.svg)](https://www.microsoft.com/windows)
+</div>
 
-## 🚀 Key Features
+---
 
-- **Liquid Glass UI**: Modern WPF interface with semi-transparent cards, smooth animations, and a breathing background.
-- **Dual Source Support**: Supports both **Apple Music** and **YouTube** (via web scraping/Windows Media Session).
-- **Privacy Mode**: Privacy toggle for YouTube presence to keep your listening habits discreet.
-- **System Tray Integration**: Minimizes to the system tray (notification area) for background operation.
-- **Auto-Startup**: Option to launch automatically when Windows starts.
-- **Clean Lifecycle**: Optimized background process management—closing the app kills all child processes immediately.
+## 💎 Liquid Glass Experience
+A state-of-the-art Windows application designed with **Liquid Glass** aesthetics. Semi-transparent interfaces, smooth gradients, and subtle breathing animations create a premium user experience that feels native to modern Windows.
+
+## ✨ Features
+*   **Dual Engine**: Seamlessly switch between **Apple Music** and **YouTube** presence.
+*   **Privacy First**: Built-in privacy toggle for YouTube to hide specific metadata.
+-   **Tray Operations**: Minimize to the system tray to keep your workspace clean.
+*   **Smart Lifecycle**: Zero-leak process management. When the UI closes, everything closes.
+*   **Startup Ready**: Optional auto-launch with Windows.
 
 ## 🛠️ Architecture
+The project leverages a high-performance **Tri-Process** architecture:
+1.  **WPF UI (C#)**: The beautiful frontend providing real-time controls.
+2.  **Node.js Backend**: The orchestrator managing Discord RPC and logic.
+3.  **Media Helper (Console)**: A dedicated .NET 8 tool for low-level Windows Media Session integration.
 
-- **UI**: .NET 8 WPF (C#)
-- **Backend Orchestrator**: Node.js
-- **Media Helper**: .NET 8 Console Application (Helper)
-- **IPC**: Stdin/Stdout pipes for efficient inter-process communication.
+## 🚀 Getting Started
+### Prerequisites
+- .NET 8 SDK
+- Node.js (v16+)
 
-## 📦 How to Run
-
-### Run from Source
+### Installation
 1. Clone the repository.
-2. Ensure you have Node.js and .NET 8 SDK installed.
-3. Open `AudioRichPresenceUI.sln` in Visual Studio or Rider.
-4. Build and Run.
+2. Run `npm install` inside the `AudioRichPresenceNode` folder.
+3. Build the solution using Visual Studio, Rider, or CLI.
 
-### Standalone Build
-Use the provided `dotnet publish` commands:
+## 🏗️ Building for Production
+To create a standalone, self-contained executable:
 ```powershell
-# Build WPF UI
-dotnet publish AudioRichPresenceUI/AudioRichPresenceUI.csproj -c Release -r win-x64 --self-contained=true -p:PublishSingleFile=true -p:IncludeNativeLibrariesForSelfExtract=true -o dist
+# Build the UI
+dotnet publish AudioRichPresenceUI/AudioRichPresenceUI.csproj -c Release -r win-x64 --self-contained=true -p:PublishSingleFile=true -o dist
 
-# Build Helper
+# Build the Helper
 dotnet publish NowPlayingHelper/NowPlayingHelper.csproj -c Release -r win-x64 --self-contained=true -o dist/NowPlayingHelper
 ```
 
-## 📄 License
-MIT
+---
+<div align="center">
+  Developed with ❤️ for the music community.
+</div>

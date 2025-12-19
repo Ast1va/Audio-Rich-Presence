@@ -6,8 +6,17 @@ using System.Windows;
 using System.Windows.Input;
 using System.Drawing; // Icon için
 
+using System.Text.Json; // Ayarlar için
+
 namespace AudioRichPresenceUI
 {
+    public class AppSettings
+    {
+        public bool AppleMusicEnabled { get; set; } = true;
+        public bool YoutubeEnabled { get; set; } = true;
+        public bool YoutubePrivacyEnabled { get; set; } = false;
+        public bool RunAtStartup { get; set; } = false;
+    }
     public partial class MainWindow : Window
     {
         // Şimdilik geliştirme: node index.js
@@ -17,16 +26,21 @@ namespace AudioRichPresenceUI
 
         private const string RunKeyPath = @"Software\Microsoft\Windows\CurrentVersion\Run";
         private const string RunValueName = "AudioRichPresenceUI";
+        private string SettingsPath = Path.Combine(AppContext.BaseDirectory, "settings.json");
 
         private Process? _nodeProcess;
         private System.Windows.Forms.NotifyIcon? _notifyIcon;
+        private AppSettings _settings = new();
 
         public MainWindow()
         {
             InitializeComponent();
+            LoadSettings();
             SetupTrayIcon();
-            LoadStartupState();
             UpdateStatus(isRunning: false);
+            
+            // İlk açılışta eğer ayarlar açıksa node'u başlat
+            UpdateNodeState();
         }
 
         private void SetupTrayIcon()
@@ -90,6 +104,7 @@ namespace AudioRichPresenceUI
 
         protected override void OnClosed(EventArgs e)
         {
+            SaveSettings(); // Kapatırken de garantiye al
             if (_notifyIcon != null)
             {
                 _notifyIcon.Visible = false;
@@ -108,6 +123,7 @@ namespace AudioRichPresenceUI
 
         private void Toggle_Click(object sender, RoutedEventArgs e)
         {
+            SaveSettings();
             UpdateNodeState();
         }
 
@@ -149,6 +165,41 @@ namespace AudioRichPresenceUI
         private void StartupCheckBox_Changed(object sender, RoutedEventArgs e)
         {
             SetRunOnStartup(StartupCheckBox.IsChecked == true);
+            SaveSettings();
+        }
+
+        private void LoadSettings()
+        {
+            try
+            {
+                if (File.Exists(SettingsPath))
+                {
+                    string json = File.ReadAllText(SettingsPath);
+                    _settings = JsonSerializer.Deserialize<AppSettings>(json) ?? new AppSettings();
+                }
+            }
+            catch { _settings = new AppSettings(); }
+
+            // UI'ı güncelle
+            ToggleApple.IsChecked = _settings.AppleMusicEnabled;
+            ToggleYoutube.IsChecked = _settings.YoutubeEnabled;
+            PrivacyCheckBox.IsChecked = _settings.YoutubePrivacyEnabled;
+            StartupCheckBox.IsChecked = _settings.RunAtStartup;
+        }
+
+        private void SaveSettings()
+        {
+            try
+            {
+                _settings.AppleMusicEnabled = ToggleApple.IsChecked == true;
+                _settings.YoutubeEnabled = ToggleYoutube.IsChecked == true;
+                _settings.YoutubePrivacyEnabled = PrivacyCheckBox.IsChecked == true;
+                _settings.RunAtStartup = StartupCheckBox.IsChecked == true;
+
+                string json = JsonSerializer.Serialize(_settings);
+                File.WriteAllText(SettingsPath, json);
+            }
+            catch { }
         }
 
         private void StartNode()
@@ -270,27 +321,6 @@ namespace AudioRichPresenceUI
                 StatusText.Text = "KAPALI";
                 StatusCircle.Fill = (System.Windows.Media.Brush)new System.Windows.Media.BrushConverter().ConvertFromString("#FF808080");
                 StatusBadge.Background = (System.Windows.Media.Brush)new System.Windows.Media.BrushConverter().ConvertFromString("#1AFFFFFF");
-            }
-        }
-
-        private void LoadStartupState()
-        {
-            try
-            {
-                using var key = Registry.CurrentUser.OpenSubKey(RunKeyPath, false);
-                if (key == null) return;
-
-                var value = key.GetValue(RunValueName) as string;
-                string? exePath = Process.GetCurrentProcess().MainModule?.FileName;
-
-                StartupCheckBox.IsChecked =
-                    !string.IsNullOrEmpty(value) &&
-                    exePath != null &&
-                    string.Equals(value, exePath, StringComparison.OrdinalIgnoreCase);
-            }
-            catch
-            {
-                // sessiz
             }
         }
 
